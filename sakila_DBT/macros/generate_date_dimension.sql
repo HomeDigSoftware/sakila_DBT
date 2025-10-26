@@ -19,7 +19,7 @@
         trim(to_char(date_day, 'Day')) as day_name,
         extract(quarter from date_day) as quarter,
 
-        -- תחילת השבוע לפי יום ראשון
+        -- seart of the week by sunday
         case 
             when lower('{{ week_start_day }}') = 'sunday' 
                 then date_day - extract(dow from date_day) * interval '1 day'
@@ -27,7 +27,7 @@
                 date_day - (extract(dow from date_day) - 1) * interval '1 day'
         end as week_start_date,
 
-        -- סוף השבוע לפי יום ראשון (שבת)
+        -- weekend by sunday that mean saturday is the day off
         case 
             when lower('{{ week_start_day }}') = 'sunday'
                 then date_day + (6 - extract(dow from date_day)) * interval '1 day'
@@ -35,7 +35,7 @@
                 date_day + (7 - (extract(dow from date_day) - 1) - 1) * interval '1 day'
         end as week_end_date,
 
-        -- שישי ושבת כסוף שבוע
+        -- set friday and saturday to weekend 
         case 
             when extract(dow from date_day) in (5, 6) then true
             else false
