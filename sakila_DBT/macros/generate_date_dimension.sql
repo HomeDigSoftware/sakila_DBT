@@ -1,8 +1,11 @@
 
 {% macro generate_date_dimension(start_date, week_start_day='sunday') %}
+
+
     with recursive date_series as (
         select 
             cast('{{ start_date }}' as date) as date_day
+            
         union all
         select 
             cast(date_day + interval '1 day' as date)
@@ -19,7 +22,7 @@
         trim(to_char(date_day, 'Day')) as day_name,
         extract(quarter from date_day) as quarter,
 
-        -- seart of the week by sunday
+        -- start of the week by sunday
         case 
             when lower('{{ week_start_day }}') = 'sunday' 
                 then date_day - extract(dow from date_day) * interval '1 day'
@@ -44,4 +47,5 @@
         to_char(date_day, 'IYYY-IW') as year_week
 
     from date_series
+
 {% endmacro %}
