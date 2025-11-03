@@ -22,8 +22,8 @@ case
     when c.active = 1 then 'Yes'
     else 'No'
 end as active_desc
-from stg2.customer c
-join stg2.address ad on ad.address_id = c.address_id
-join stg2.city cy on cy.city_id = ad.city_id
-join stg2.country con on con.country_id = cy.country_id
+from {{source('stg2', 'customer')}} c
+join {{source('stg2', 'address')}} ad on ad.address_id = c.address_id
+join {{source('stg2', 'city')}} cy on cy.city_id = ad.city_id
+join {{source('stg2', 'country')}} con on con.country_id = cy.country_id
 

@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: stg2
+    database: postgres
+    schema: stg2
+    tables:
+      - name: inventory
+        identifier: inventory
+      - name: rental
+        identifier: rental
+      - name: payment
+        identifier: payment

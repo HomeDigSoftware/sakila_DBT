@@ -14,4 +14,4 @@ select
         when st.active = 'TRUE' then 'yes'
         else 'no'
     end as active_desc
-from stg2.staff st
+from {{source('stg2', 'staff')}}  st

@@ -1,0 +1,15 @@
+sources: 
+  - name: stg2
+    database: postgres
+    schema: stg2
+    tables: 
+      - name: customer
+        identifier: customer 
+      - name: address
+        identifier: address 
+      - name: city
+        identifier: city
+      - name: country
+        identifier: country
+      - name: staff
+        identifier: staff
