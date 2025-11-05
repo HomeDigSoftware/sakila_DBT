@@ -1,4 +1,8 @@
-{{ config(materialized='table') }}
+{{ config(pre_hook= ["create table if not exists dwh.relearning_hooks ( id int , email varchar(150), time timestamp  ) ",
+                    "insert into dwh.relearning_hooks (id, email, time) values (0, 'tt@tt.com', now())"],
+          post_hook= "insert into dwh.relearning_hooks (id, email, time) values(1, 'test@example.com', now())",
+          materialized='table'
+) }}
 
 
 
@@ -11,6 +15,6 @@ select
                         ,except=["email"]
                         ,relation_alias="c"
                         ,suffix="" )}}
-from {{ source('stg2', 'customer') }}
+from {{ source('stg2', 'customer') }} c
 
 
