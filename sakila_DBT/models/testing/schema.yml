@@ -1,0 +1,12 @@
+models:
+  - name: w_hook
+    description: "testing hooks in dbt model"
+    config:
+      +post-hook: "insert into {{this}}(country_id, country ) VALUES (-1, 'NA')" 
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+    

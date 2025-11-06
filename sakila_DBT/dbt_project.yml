@@ -46,4 +46,4 @@ models:
       +unique_key: customer_id
     testing: 
       +materialized: table
-    
+      

@@ -1,3 +1,46 @@
+
+version: 2 
+
+models:
+  - name: dim_customer_new
+    description: "Customer dimension model"
+    config:
+      +post-hook: "insert into {{this}}(customer_id, first_name) VALUES (-1, 'NA')" 
+    columns:
+      - name: customer_id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+    
+  - name: dim_staff
+    description: "Staff dimension model"
+    columns:
+      - name: staff_id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_store
+    description: "Store dimension model"
+    columns:
+      - name: store_id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_film
+    description: "Film dimension model"
+    columns:
+      - name: film_id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+
 sources: 
   - name: stg2
     database: postgres
