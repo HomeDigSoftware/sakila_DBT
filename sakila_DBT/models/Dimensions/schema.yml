@@ -5,7 +5,7 @@ models:
   - name: dim_customer_new
     description: "Customer dimension model"
     config:
-      +post-hook: "insert into {{this}}(customer_id, first_name) VALUES (-1, 'NA')" 
+      post_hook: "insert into {{this}}(customer_id, first_name, last_name) VALUES (-1, 'NA', 'NA')" 
     columns:
       - name: customer_id
         description: "The primary key for this table"
@@ -15,6 +15,8 @@ models:
     
   - name: dim_staff
     description: "Staff dimension model"
+    config:
+      post_hook: "insert into {{this}}(staff_id, first_name, last_name) VALUES (-1, 'NA', 'NA')"
     columns:
       - name: staff_id
         description: "The primary key for this table"
@@ -24,6 +26,8 @@ models:
 
   - name: dim_store
     description: "Store dimension model"
+    config:
+      post_hook: "insert into {{this}}(store_id, first_name, last_name) VALUES (-1, 'NA', 'NA')"
     columns:
       - name: store_id
         description: "The primary key for this table"
@@ -33,6 +37,8 @@ models:
 
   - name: dim_film
     description: "Film dimension model"
+    config:
+      post_hook: "insert into {{this}}(film_id, title, description) VALUES (-1, 'NA', 'NA')"
     columns:
       - name: film_id
         description: "The primary key for this table"
@@ -56,3 +62,5 @@ sources:
         identifier: country
       - name: staff
         identifier: staff
+      - name: film
+        identifier: film

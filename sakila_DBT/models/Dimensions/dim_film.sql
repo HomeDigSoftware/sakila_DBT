@@ -12,7 +12,7 @@ select
      case   when special_features like '%Behind the Scenes%'  then 1 else 0 end as is_behind_the_Scenes,
      case   when special_features like '%Commentaries%'  then 1 else 0 end as is_ommentaries,
      case   when special_features like '%Trailers%'  then 1 else 0 end as is_Trailers
-from stg2.film f
+from {{ source('stg2', 'film') }} f
 left join stg2.language l on l.language_id = f.language_id
 left join stg2.film_category fc on fc.film_id = f.film_id
 left join stg2.category c on c.category_id = fc.category_id

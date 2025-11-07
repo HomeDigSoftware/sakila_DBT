@@ -1,0 +1,63 @@
+{{ config(materialized='table') }}
+
+{% set features_query %}
+SELECT DISTINCT TRIM(BOTH '"' FROM value) AS feature
+FROM stg2.film,
+LATERAL unnest(
+    string_to_array(        
+            replace(replace(special_features, '{', ''), '}', ''), 
+                    ','                
+                        )
+                        ) AS value
+{% endset %}
+
+{% set features = dbt_utils.get_query_results(features_query) %}
+
+{% set feature_list = [] %}
+{% for feature in features %}
+    {% do feature_list.append(feature[0]) %}
+{% endfor %}
+
+with special_features_pivot as (
+    {{ dbt_utils.pivot(
+        'feature',
+        feature_list,
+        agg='bool_or',
+        then_value=True,
+        else_value=False,
+        quote_identifiers=False,
+        prefix='has_feature_',
+        suffix='',
+        distinct=True
+    ) }}
+    FROM (
+        SELECT 
+            film_id,
+            TRIM(BOTH '"' FROM value) AS feature
+        FROM {{ source('stg2', 'film') }},
+        LATERAL unnest(
+            string_to_array(        
+                replace(replace(special_features, '{', ''), '}', ''), 
+                ','                
+            )
+        ) AS value
+    ) features_unpacked
+    GROUP BY film_id
+)
+
+select 
+    f.*,
+    l.name as lang,
+    c.category_id, 
+    c.name as category_name,
+    case 
+        when f.length > 120 then 'long'
+        when f.length <= 75 then 'short'
+        else 'medium'
+    end as film_length,
+    sf.*
+from {{ source('stg2', 'film') }} f
+left join {{ source('stg2', 'language') }} l on l.language_id = f.language_id
+left join {{ source('stg2', 'film_category') }} fc on fc.film_id = f.film_id
+left join {{ source('stg2', 'category') }} c on c.category_id = fc.category_id
+left join special_features_pivot sf on sf.film_id = f.film_id

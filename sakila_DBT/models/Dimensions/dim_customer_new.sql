@@ -1,6 +1,5 @@
-{{ config(post_hook= "insert into {{this}}(customer_id, first_name, last_name) VALUES (-1, 'NA', 'NA')",
-          materialized='table'
-) }}
+{{ config(materialized='table') }}
+
 
 
 select

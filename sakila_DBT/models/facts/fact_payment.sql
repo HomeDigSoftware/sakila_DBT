@@ -1,6 +1,5 @@
 {{config(
-    materialized='incremental',
-    unique_key='pyment_id'
+    unique_key='payment_id'
 )}}
 
 

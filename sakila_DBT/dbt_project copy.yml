@@ -43,7 +43,8 @@ models:
       +materialized: table
     fact:
       +materialized: incremental
-      +pre-hook: "{{log_dbt(table_name= this , log_type = 'start_run')}}"
-      +post-hook: "{{log_dbt(table_name= this , log_type = 'end_run')}}"
-
+      +pre-hook: "{{log_dbt(table_name= this, log_type= 'start_run')}}"
+      +post-hook: "{{log_dbt(table_name= this, log_type= 'end_run')}}"
+    testing: 
+      +materialized: table
       
