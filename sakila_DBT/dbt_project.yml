@@ -37,12 +37,12 @@ vars:
 models:
   sakila_DBT:
     # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: table
     dimensions:
       +materialized: table
-    fact:
-      +materialized: incremental
+    example:
+      +materialized: table
+    facts:
+      +materialized: table
       +pre-hook: "{{log_dbt(table_name= this , log_type = 'start_run')}}"
       +post-hook: "{{log_dbt(table_name= this , log_type = 'end_run')}}"
 

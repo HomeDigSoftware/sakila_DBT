@@ -1,7 +1,4 @@
-
-{{config(
-    unique_key='rental_id'
-)}}
+{{config( materialized='table')}}
 
 select
     r.*,
@@ -17,9 +14,3 @@ select
 from {{ source('stg2', 'rental') }} r
 left join {{ source('stg2', 'inventory') }} i on i.inventory_id = r.inventory_id
 
-{% if is_incremental() %}
-
-where r.last_update > (select max(last_update) from {{ this }})
-      or i.last_update > (select max(inventory_last_update) from {{ this }})
-
-{% endif %}
