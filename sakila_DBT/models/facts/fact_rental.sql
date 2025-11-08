@@ -1,4 +1,4 @@
-{{config( materialized='table')}}
+{{config( unique_key='rental_id' )}}
 
 select
     r.*,

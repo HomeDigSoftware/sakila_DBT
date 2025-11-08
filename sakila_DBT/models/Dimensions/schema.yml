@@ -64,3 +64,9 @@ sources:
         identifier: staff
       - name: film
         identifier: film
+      - name: language
+        identifier: language
+      - name: film_category
+        identifier: film_category
+      - name: category
+        identifier: category

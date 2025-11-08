@@ -2,29 +2,50 @@
 
 {% set features_query %}
 SELECT DISTINCT TRIM(BOTH '"' FROM value) AS feature
-FROM stg2.film,
+FROM {{ source('stg2', 'film') }},
 LATERAL unnest(
     string_to_array(        
             replace(replace(special_features, '{', ''), '}', ''), 
-                    ','                
-                        )
-                        ) AS value
+            ','                
+    )
+) AS value
+WHERE value IS NOT NULL
 {% endset %}
 
-{% set features = dbt_utils.get_query_results(features_query) %}
+{%- if execute -%}
+    {%- set results = run_query(features_query) -%}
+    {%- set features = [] -%}
+    {%- for row in results.rows -%}
+        {%- do features.append(row.feature) -%}
+    {%- endfor -%}
+    {{ log("Features found: " ~ features, info=True) }}
+{%- else -%}
+    {%- set features = [] -%}
+{%- endif -%}
 
-{% set feature_list = [] %}
-{% for feature in features %}
-    {% do feature_list.append(feature[0]) %}
-{% endfor %}
+
+
+{%- if execute -%}
+    {%- set test = run_query( dbt_utils.get_query_results_as_dict(
+            features_query
+        )) -%}
+    {%- set features_09 = [] -%}
+    {%- for row in test.rows -%}
+        {%- do features_09.append(row.feature) -%}
+    {%- endfor -%}
+    {{ log("Features found: " ~ features_09, info=True) }}
+{%- else -%}
+    {%- set features_09 = [] -%}
+{%- endif -%}
+
 
 with special_features_pivot as (
     {{ dbt_utils.pivot(
         'feature',
-        feature_list,
-        agg='bool_or',
-        then_value=True,
-        else_value=False,
+        features_09,
+        agg='max', 
+        then_value=1,
+        else_value=0,
         quote_identifiers=False,
         prefix='has_feature_',
         suffix='',
@@ -41,6 +62,7 @@ with special_features_pivot as (
                 ','                
             )
         ) AS value
+        WHERE value IS NOT NULL
     ) features_unpacked
     GROUP BY film_id
 )

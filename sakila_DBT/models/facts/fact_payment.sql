@@ -1,4 +1,4 @@
-
+{{config(  unique_key='payment_id')}}
 
 select
     *
